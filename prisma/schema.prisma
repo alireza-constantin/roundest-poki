@@ -11,10 +11,22 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model vote {
+model Vote {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
 
-  votedFor     Int
-  votedAgainst Int
+  votedFor       Pokemon @relation(name: "votesFor", fields: [votedForId], references: [id])
+  votedForId     Int
+  votedAgainst   Pokemon @relation(name: "votesAgainst", fields: [votedAgainstId], references: [id])
+  votedAgainstId Int
+}
+
+model Pokemon {
+  id Int @id
+
+  name      String
+  spriteUrl String
+
+  VotesFor     Vote[] @relation("votesFor")
+  VotesAgainst Vote[] @relation("votesAgainst")
 }
