@@ -52,7 +52,7 @@ const PokemonListings = (props: {
 }): JSX.Element => {
 	return (
 		<div className="w-64 h-64 max-w-2xl flex flex-col items-center">
-			<Image width={250} height={250} src={props.pokemon.sprite!} alt={props.pokemon.name} />
+			<Image width={250} height={250} src={props.pokemon.spriteUrl!} alt={props.pokemon.name} />
 			<div className="text-xl text-center  capitalize pb-2 mt-[-2rem]">{props.pokemon.name}</div>
 			<button onClick={() => props.vote()} className="bg-white text-gray-700 px-1 py-2 rounded-md hover:ring-4 mt-1">
 				Rounder
