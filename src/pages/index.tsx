@@ -49,7 +49,9 @@ const Home: NextPage = () => {
 				<div className="flex items-center pb-4">
 					<div className="pr-4 flex items-center gap-2">
 						<Image className="invert" src={'/github.svg'} width={20} height={20} alt="github icon" />
-						<Link href={'https://github.com/alireza-constantin/roundest-poki'}>Github</Link>
+						<Link target={'_blank'} href={'https://github.com/alireza-constantin/roundest-poki'}>
+							Github
+						</Link>
 					</div>
 					{' | '}
 					<div className="pl-4 flex items-center gap-2">
@@ -79,7 +81,7 @@ const PokemonListings = (props: {
 }): JSX.Element => {
 	return (
 		<div className="w-64 h-auto max-w-2xl flex flex-col items-center">
-			<Image width={250} height={250} src={props.pokemon.spriteUrl!} alt={props.pokemon.name} />
+			<Image quality={100} width={250} height={250} src={props.pokemon.spriteUrl!} alt={props.pokemon.name} />
 			<div className="font-semibold tracking-wider text-base sm:text-xl text-center  capitalize pb-2 md:mt-[-1rem]">
 				{props.pokemon.name}
 			</div>

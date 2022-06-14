@@ -1,4 +1,5 @@
 import type { FC, ReactNode } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import type { GetStaticProps } from 'next';
 import { prisma } from '@/backend/utils/prisma';
 import type { AsyncReturnType } from '@/utils/inferType';
@@ -37,27 +38,41 @@ const calcPercent = (pokemon: returnedPokemon[number]) => {
 };
 
 // Show pokemon component
-const PokemonListings: FC<{ pokemon: returnedPokemon[number] }> = (props) => {
+const PokemonListings: FC<{ pokemon: returnedPokemon[number]; width: number | undefined }> = (props) => {
 	return (
-		<div className="flex p-2 items-center justify-between border-b">
-			<div className="flex items-center">
-				<Image width={64} height={64} layout="fixed" src={props.pokemon.spriteUrl} alt={props.pokemon.name} />
-				<p className="capitalize ml-2">{props.pokemon.name}</p>
+		<>
+			<div className="relative flex  p-2 items-center justify-between border-b bg-violet-500/70">
+				<div className="flex items-center z-10">
+					<Image width={64} height={64} layout="fixed" src={props.pokemon.spriteUrl} alt={props.pokemon.name} />
+					<p className="capitalize ml-2">{props.pokemon.name}</p>
+				</div>
+				<div className="p-2 z-10">{calcPercent(props.pokemon).toFixed(2)}%</div>
+				<div
+					style={{ width: `${calcPercent(props.pokemon)}%` }}
+					className="absolute z-0 left-0 top-0 h-full bg-violet-700/60"
+				/>
 			</div>
-			<div className="p-2">{calcPercent(props.pokemon)}%</div>
-		</div>
+		</>
 	);
 };
 
 // results page
-const results: FC<{ pokemons: returnedPokemon; children?: ReactNode }> = ({ pokemons }) => {
+const Results: FC<{ pokemons: returnedPokemon; children?: ReactNode }> = ({ pokemons }) => {
+	const [width, setWidth] = useState<number | undefined>(0);
+	const boxRef = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		setWidth(boxRef.current?.clientWidth);
+	}, [boxRef]);
+
 	return (
 		<div className="flex flex-col items-center">
 			<h1 className="p-4 text-4xl pb-8">Results</h1>
-			<div className="border w-full max-w-2xl">
-				{pokemons?.map((pokemon, idx) => {
-					return <PokemonListings key={idx} pokemon={pokemon} />;
-				})}
+			<div ref={boxRef} id="resultBox" className="border w-full max-w-2xl">
+				{pokemons
+					?.sort((a, b) => calcPercent(b) - calcPercent(a))
+					.map((pokemon, idx) => {
+						return <PokemonListings width={width} key={idx} pokemon={pokemon} />;
+					})}
 			</div>
 		</div>
 	);
@@ -71,4 +86,4 @@ export const getStaticProps: GetStaticProps = async () => {
 	};
 };
 
-export default results;
+export default Results;
