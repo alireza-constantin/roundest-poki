@@ -28,13 +28,13 @@ const Home: NextPage = () => {
 
 	return (
 		<div className="h-screen w-screen flex flex-col justify-center items-center select-none">
-			<div className="text-2xl text-center mb">Which Pokémon is the Roundest?</div>
+			<div className="text-2xl font-bold text-center mb">Which Pokémon is the Roundest?</div>
 			<div className="p-4" />
 			<div className="border rounded w-full md:w-2/3 lg:w-3/6 p-8 flex-row  flex justify-between items-center">
 				{isPokemonLoaded ? (
 					<>
 						<PokemonListings pokemon={pokemon1.data} vote={() => voteForRoundest(firstId)}></PokemonListings>
-						<div className="p-8 ">Vs</div>
+						<div className="p-8 font-extrabold text-2xl">Vs</div>
 						<PokemonListings pokemon={pokemon2.data} vote={() => voteForRoundest(secondId)} />
 					</>
 				) : (
@@ -61,8 +61,13 @@ const PokemonListings = (props: {
 	return (
 		<div className="w-64 h-auto max-w-2xl flex flex-col items-center">
 			<Image width={250} height={250} src={props.pokemon.spriteUrl!} alt={props.pokemon.name} />
-			<div className="text-xl text-center  capitalize pb-2 mt-[-1.2rem]">{props.pokemon.name}</div>
-			<button onClick={() => props.vote()} className="bg-white text-gray-700 px-1 py-2 rounded-md hover:ring-4 mt-1">
+			<div className="font-semibold tracking-wider text-base md:text-xl text-center  capitalize pb-2 md:mt-[-1rem]">
+				{props.pokemon.name}
+			</div>
+			<button
+				onClick={() => props.vote()}
+				className="bg-white font-bold text-gray-700 px-3 py-1 sm:py-2 text-sm sm:text-lg rounded-md hover:ring-4 mt-2"
+			>
 				Rounder
 			</button>
 		</div>
