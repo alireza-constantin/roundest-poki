@@ -24,17 +24,25 @@ const Home: NextPage = () => {
 		updateIds(getVoteOptions());
 	};
 
+	const isPokemonLoaded = !pokemon1.isLoading && !pokemon2.isLoading && pokemon1.data && pokemon2.data;
+
 	return (
 		<div className="h-screen w-screen flex flex-col justify-center items-center select-none">
 			<div className="text-2xl text-center mb">Which Pokémon is the Roundest?</div>
 			<div className="p-4" />
-			<div className="border rounded p-8 flex-col md:flex-row  flex justify-between items-center">
-				{!pokemon1.isLoading && !pokemon2.isLoading && pokemon1.data && pokemon2.data && (
+			<div className="border rounded w-full md:w-2/3 lg:w-3/6 p-8 flex-row  flex justify-between items-center">
+				{isPokemonLoaded ? (
 					<>
 						<PokemonListings pokemon={pokemon1.data} vote={() => voteForRoundest(firstId)}></PokemonListings>
 						<div className="p-8 ">Vs</div>
 						<PokemonListings pokemon={pokemon2.data} vote={() => voteForRoundest(secondId)} />
 					</>
+				) : (
+					<div className="flex items-center justify-between w-full">
+						<Image className="w-64 h-64 max-w-2xl" width={250} height={250} src={'/rings.svg'} alt="spinner" />
+						<div>Vs</div>
+						<Image className="w-64 h-64 max-w-2xl" width={250} height={250} src={'/rings.svg'} alt="spinner" />
+					</div>
 				)}
 			</div>
 		</div>
@@ -51,7 +59,7 @@ const PokemonListings = (props: {
 	vote: () => void;
 }): JSX.Element => {
 	return (
-		<div className="w-64 h-64 max-w-2xl flex flex-col items-center">
+		<div className="w-64 h-auto max-w-2xl flex flex-col items-center">
 			<Image width={250} height={250} src={props.pokemon.spriteUrl!} alt={props.pokemon.name} />
 			<div className="text-xl text-center  capitalize pb-2 mt-[-1.2rem]">{props.pokemon.name}</div>
 			<button onClick={() => props.vote()} className="bg-white text-gray-700 px-1 py-2 rounded-md hover:ring-4 mt-1">
