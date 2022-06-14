@@ -38,7 +38,7 @@ const calcPercent = (pokemon: returnedPokemon[number]) => {
 };
 
 // Show pokemon component
-const PokemonListings: FC<{ pokemon: returnedPokemon[number]; width: number | undefined }> = (props) => {
+const PokemonListings: FC<{ pokemon: returnedPokemon[number] }> = (props) => {
 	return (
 		<>
 			<div className="relative flex  p-2 items-center justify-between border-b bg-violet-500/70">
@@ -58,20 +58,14 @@ const PokemonListings: FC<{ pokemon: returnedPokemon[number]; width: number | un
 
 // results page
 const Results: FC<{ pokemons: returnedPokemon; children?: ReactNode }> = ({ pokemons }) => {
-	const [width, setWidth] = useState<number | undefined>(0);
-	const boxRef = useRef<HTMLDivElement>(null);
-	useEffect(() => {
-		setWidth(boxRef.current?.clientWidth);
-	}, [boxRef]);
-
 	return (
 		<div className="flex flex-col items-center">
 			<h1 className="p-4 text-4xl pb-8">Results</h1>
-			<div ref={boxRef} id="resultBox" className="border w-full max-w-2xl">
+			<div id="resultBox" className="border w-full max-w-2xl">
 				{pokemons
 					?.sort((a, b) => calcPercent(b) - calcPercent(a))
 					.map((pokemon, idx) => {
-						return <PokemonListings width={width} key={idx} pokemon={pokemon} />;
+						return <PokemonListings key={idx} pokemon={pokemon} />;
 					})}
 			</div>
 		</div>
