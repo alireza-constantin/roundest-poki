@@ -53,7 +53,7 @@ const PokemonListings: FC<{ pokemon: returnedPokemon[number] }> = (props) => {
 const results: FC<{ pokemons: returnedPokemon; children?: ReactNode }> = ({ pokemons }) => {
 	return (
 		<div className="flex flex-col items-center">
-			<h1 className="p-4 text-2xl pb-8">Results</h1>
+			<h1 className="p-4 text-4xl pb-8">Results</h1>
 			<div className="border w-full max-w-2xl">
 				{pokemons?.map((pokemon, idx) => {
 					return <PokemonListings key={idx} pokemon={pokemon} />;

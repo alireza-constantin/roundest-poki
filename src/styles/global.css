@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+
 body {
-    @apply bg-gray-600 text-gray-100;
+    @apply bg-indigo-900/75 text-indigo-100/90;
+    font-family: 'Titan One', cursive;
 }

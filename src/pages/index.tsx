@@ -28,35 +28,43 @@ const Home: NextPage = () => {
 	const isPokemonLoaded = !pokemon1.isLoading && !pokemon2.isLoading && pokemon1.data && pokemon2.data;
 
 	return (
-		<div className="h-screen w-screen flex flex-col justify-between items-center select-none">
-			<div className="text-2xl font-bold text-center pt-20 mb">Which Pokémon is the Roundest?</div>
-			<div className="border rounded w-full md:w-2/3 lg:w-3/6 p-8 flex-row  flex justify-between items-center">
-				{isPokemonLoaded ? (
-					<>
-						<PokemonListings pokemon={pokemon1.data} vote={() => voteForRoundest(firstId)}></PokemonListings>
-						<div className="p-8 font-extrabold text-2xl">Vs</div>
-						<PokemonListings pokemon={pokemon2.data} vote={() => voteForRoundest(secondId)} />
-					</>
-				) : (
-					<div className="flex items-center justify-between w-full">
-						<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
-						<div>Vs</div>
-						<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
+		<>
+			<div className="flex flex-col gap-16 justify-between items-center select-none">
+				<div className="text-3xl font-bold text-center mb">Which Pokémon is the Roundest?</div>
+				<div className="border rounded w-full md:w-2/3 lg:w-3/6 p-8 flex-row  flex justify-between items-center">
+					{isPokemonLoaded ? (
+						<>
+							<PokemonListings pokemon={pokemon1.data} vote={() => voteForRoundest(firstId)}></PokemonListings>
+							<div className="p-8 font-extrabold text-2xl">Vs</div>
+							<PokemonListings pokemon={pokemon2.data} vote={() => voteForRoundest(secondId)} />
+						</>
+					) : (
+						<div className="flex items-center justify-between w-full">
+							<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
+							<div>Vs</div>
+							<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
+						</div>
+					)}
+				</div>
+				<div className="flex items-center pb-4">
+					<div className="pr-4 flex items-center gap-2">
+						<Image className="invert" src={'/github.svg'} width={20} height={20} alt="github icon" />
+						<Link href={'https://github.com/alireza-constantin/roundest-poki'}>Github</Link>
 					</div>
-				)}
-			</div>
-			<div className="flex items-center pb-2">
-				<div className="pr-4 flex items-center gap-2">
-					<Image src={'/github.svg'} width={20} height={20} alt="github icon" />
-					<Link href={'https://github.com/alireza-constantin/roundest-poki'}>Github</Link>
+					{' | '}
+					<div className="pl-4 flex items-center gap-2">
+						<Image
+							className="invert"
+							src={'/pokemon-icon.svg'}
+							width={20}
+							height={20}
+							alt="pokemon icon for showing results"
+						/>
+						<Link href={'/results'}>Results</Link>
+					</div>
 				</div>
-				{' | '}
-				<div className="pl-4 flex items-center gap-2">
-					<Image src={'/pokemon-icon.svg'} width={20} height={20} alt="pokemon icon for showing results" />
-					<Link href={'/results'}>Results</Link>
-				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
@@ -72,7 +80,7 @@ const PokemonListings = (props: {
 	return (
 		<div className="w-64 h-auto max-w-2xl flex flex-col items-center">
 			<Image width={250} height={250} src={props.pokemon.spriteUrl!} alt={props.pokemon.name} />
-			<div className="font-semibold tracking-wider text-base md:text-xl text-center  capitalize pb-2 md:mt-[-1rem]">
+			<div className="font-semibold tracking-wider text-base sm:text-xl text-center  capitalize pb-2 md:mt-[-1rem]">
 				{props.pokemon.name}
 			</div>
 			<button
