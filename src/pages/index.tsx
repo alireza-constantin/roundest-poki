@@ -2,6 +2,7 @@ import { getVoteOptions } from '@/utils/getRandomPokemon';
 import { trpc } from '@/utils/trpc';
 import type { NextPage } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ReactNode, useState } from 'react';
 import { inferQueryResponse } from './api/trpc/[trpc]';
 
@@ -27,9 +28,8 @@ const Home: NextPage = () => {
 	const isPokemonLoaded = !pokemon1.isLoading && !pokemon2.isLoading && pokemon1.data && pokemon2.data;
 
 	return (
-		<div className="h-screen w-screen flex flex-col justify-center items-center select-none">
-			<div className="text-2xl font-bold text-center mb">Which Pokémon is the Roundest?</div>
-			<div className="p-4" />
+		<div className="h-screen w-screen flex flex-col justify-between items-center select-none">
+			<div className="text-2xl font-bold text-center pt-20 mb">Which Pokémon is the Roundest?</div>
 			<div className="border rounded w-full md:w-2/3 lg:w-3/6 p-8 flex-row  flex justify-between items-center">
 				{isPokemonLoaded ? (
 					<>
@@ -39,11 +39,22 @@ const Home: NextPage = () => {
 					</>
 				) : (
 					<div className="flex items-center justify-between w-full">
-						<Image className="w-64 h-64 max-w-2xl" width={250} height={250} src={'/rings.svg'} alt="spinner" />
+						<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
 						<div>Vs</div>
-						<Image className="w-64 h-64 max-w-2xl" width={250} height={250} src={'/rings.svg'} alt="spinner" />
+						<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
 					</div>
 				)}
+			</div>
+			<div className="flex items-center pb-2">
+				<div className="pr-4 flex items-center gap-2">
+					<Image src={'/github.svg'} width={20} height={20} alt="github icon" />
+					<Link href={'https://github.com/alireza-constantin/roundest-poki'}>Github</Link>
+				</div>
+				{' | '}
+				<div className="pl-4 flex items-center gap-2">
+					<Image src={'/pokemon-icon.svg'} width={20} height={20} alt="pokemon icon for showing results" />
+					<Link href={'/results'}>Results</Link>
+				</div>
 			</div>
 		</div>
 	);
