@@ -49,8 +49,8 @@ const Home: NextPage = () => {
 				<div className="flex items-center pb-4">
 					<div className="pr-4 flex items-center gap-2">
 						<Image className="invert" src={'/github.svg'} width={20} height={20} alt="github icon" />
-						<Link target={'_blank'} href={'https://github.com/alireza-constantin/roundest-poki'}>
-							Github
+						<Link href={'https://github.com/alireza-constantin/roundest-poki'}>
+							<a target="_blank">Github</a>
 						</Link>
 					</div>
 					{' | '}

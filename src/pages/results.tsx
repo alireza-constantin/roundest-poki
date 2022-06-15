@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from 'react';
-import { useRef, useEffect, useState } from 'react';
 import type { GetStaticProps } from 'next';
 import { prisma } from '@/backend/utils/prisma';
 import type { AsyncReturnType } from '@/utils/inferType';
@@ -9,9 +8,6 @@ import Image from 'next/image';
 // and make a typesafe page
 const getPokemonsByOrder = async () => {
 	return await prisma.pokemon.findMany({
-		orderBy: {
-			VotesFor: { _count: 'desc' },
-		},
 		select: {
 			id: true,
 			name: true,
