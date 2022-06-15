@@ -13,7 +13,7 @@ https://roundest-poki.vercel.app/
 
 ## Acknowledgements
 
-- [Thanks to Theo Browne]('https://github.com/TheoBr')
+- [Thanks to Theo Browne](https://github.com/TheoBr)
 
 ## Tech Stack
 
@@ -45,7 +45,7 @@ Install dependencies
 
 you need to create two postgres database locally or cloud
 because Some development-focused commands for relational databases of Prisma Migrate use a second, temporary database
-[link to docs on prisma]('https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database')
+[link to docs on prisma](https://www.prisma.io/docs/concepts/components/prisma-migrate/shadow-database)
 
 then enter your database url to these variable in .env file
 
