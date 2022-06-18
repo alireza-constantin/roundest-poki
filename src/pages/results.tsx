@@ -1,4 +1,5 @@
 import type { FC, ReactNode } from 'react';
+import { useRef } from 'react';
 import type { GetStaticProps } from 'next';
 import { prisma } from '@/backend/utils/prisma';
 import type { AsyncReturnType } from '@/utils/inferType';
@@ -33,8 +34,32 @@ const calcPercent = (pokemon: returnedPokemon[number]) => {
 	return (VotesFor / (VotesAgainst + VotesFor)) * 100;
 };
 
+function isInViewport(element: HTMLDivElement) {
+	const rect = element.getBoundingClientRect();
+	return (
+		rect.top >= 0 &&
+		rect.left >= 0 &&
+		rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+		rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+	);
+}
+
 // Show pokemon component
 const PokemonListings: FC<{ pokemon: returnedPokemon[number] }> = (props) => {
+	const barRef = useRef<HTMLDivElement>(null);
+
+	const animate = () => {
+		if (barRef.current) {
+			if (isInViewport(barRef.current)) {
+				barRef.current.style.width = calcPercent(props.pokemon) + '%';
+			}
+		}
+	};
+
+	if (typeof document !== 'undefined') {
+		document.addEventListener('scroll', animate);
+	}
+
 	return (
 		<>
 			<div className="relative flex  p-2 items-center justify-between border-b bg-violet-500/70">
@@ -44,8 +69,8 @@ const PokemonListings: FC<{ pokemon: returnedPokemon[number] }> = (props) => {
 				</div>
 				<div className="p-2 z-10">{calcPercent(props.pokemon).toFixed(2)}%</div>
 				<div
-					style={{ width: `${calcPercent(props.pokemon)}%` }}
-					className="absolute z-0 left-0 top-0 h-full bg-violet-700/60"
+					ref={barRef}
+					className="absolute z-0 w-0 transition-all duration-[2500ms] left-0 top-0 h-full bg-violet-700/60"
 				/>
 			</div>
 		</>
@@ -54,6 +79,8 @@ const PokemonListings: FC<{ pokemon: returnedPokemon[number] }> = (props) => {
 
 // results page
 const Results: FC<{ pokemons: returnedPokemon; children?: ReactNode }> = ({ pokemons }) => {
+	console.log('hello');
+
 	return (
 		<div className="flex flex-col items-center">
 			<h1 className="p-4 text-4xl pb-8">Results</h1>
