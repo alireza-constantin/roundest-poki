@@ -1,50 +1,57 @@
-import { getVoteOptions } from '@/utils/getRandomPokemon';
 import { trpc } from '@/utils/trpc';
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ReactNode, useState } from 'react';
 import { inferQueryResponse } from './api/trpc/[trpc]';
 
 const Home: NextPage = () => {
-	const [ids, updateIds] = useState(() => getVoteOptions());
-
-	const [firstId, secondId] = ids;
-
-	const pokemon1 = trpc.useQuery(['get-pokemon-by-id', { id: firstId }]);
-	const pokemon2 = trpc.useQuery(['get-pokemon-by-id', { id: secondId }]);
+	const {
+		data: pokemonPair,
+		refetch,
+		isLoading,
+	} = trpc.useQuery(['get-pokemon-pair'], {
+		refetchInterval: false,
+		refetchOnReconnect: false,
+		refetchOnWindowFocus: false,
+	});
 
 	const voteMutation = trpc.useMutation(['cast-vote']);
 
 	const voteForRoundest = (selected: number) => {
-		if (selected === firstId) {
-			voteMutation.mutate({ votedFor: firstId, votedAgainst: secondId });
+		if (!pokemonPair) return;
+
+		if (selected === pokemonPair?.firstPokemon.id) {
+			voteMutation.mutate({ votedFor: pokemonPair.firstPokemon.id, votedAgainst: pokemonPair.secondPokemon.id });
 		} else {
-			voteMutation.mutate({ votedFor: secondId, votedAgainst: firstId });
+			voteMutation.mutate({ votedFor: pokemonPair.secondPokemon.id, votedAgainst: pokemonPair.firstPokemon.id });
 		}
-		updateIds(getVoteOptions());
+
+		refetch();
 	};
 
-	const isPokemonLoaded = !pokemon1.isLoading && !pokemon2.isLoading && pokemon1.data && pokemon2.data;
+	const isPokeLoading = voteMutation.isLoading || isLoading;
 
 	return (
 		<>
 			<div className="flex flex-col gap-16 justify-between items-center select-none">
 				<div className="text-3xl font-bold text-center mb">Which Pokémon is the Roundest?</div>
-				<div className="border rounded w-full md:w-2/3 lg:w-3/6 p-8 flex-row  flex justify-between items-center">
-					{isPokemonLoaded ? (
+				<div className="w-full md:w-2/3 lg:w-3/6 p-8 flex-row  flex justify-between items-center animate-fade-in">
+					{pokemonPair && (
 						<>
-							<PokemonListings pokemon={pokemon1.data} vote={() => voteForRoundest(firstId)}></PokemonListings>
+							<PokemonListings
+								pokemon={pokemonPair.firstPokemon}
+								vote={() => voteForRoundest(pokemonPair.firstPokemon.id)}
+								disabled={isPokeLoading}
+							></PokemonListings>
 							<div className="p-8 font-extrabold text-2xl">Vs</div>
-							<PokemonListings pokemon={pokemon2.data} vote={() => voteForRoundest(secondId)} />
+							<PokemonListings
+								pokemon={pokemonPair.secondPokemon}
+								vote={() => voteForRoundest(pokemonPair.secondPokemon.id)}
+								disabled={isPokeLoading}
+							/>
 						</>
-					) : (
-						<div className="flex items-center justify-between w-full">
-							<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
-							<div>Vs</div>
-							<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
-						</div>
 					)}
+					{!pokemonPair && <Loader />}
 				</div>
 				<div className="flex items-center pb-4">
 					<div className="pr-4 flex items-center gap-2">
@@ -72,15 +79,21 @@ const Home: NextPage = () => {
 
 export default Home;
 
-type PokemonFromServer = inferQueryResponse<'get-pokemon-by-id'>;
+type PokemonFromServer = inferQueryResponse<'get-pokemon-pair'>['firstPokemon'];
 
-const PokemonListings = (props: {
-	pokemon: PokemonFromServer;
-	children?: ReactNode;
-	vote: () => void;
-}): JSX.Element => {
+const Loader = () => {
 	return (
-		<div className="w-64 h-auto max-w-2xl flex flex-col items-center">
+		<div className="flex items-center justify-between w-full">
+			<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
+			<div>Vs</div>
+			<Image className="w-64 h-72 max-w-2xl" width={250} height={285} src={'/rings.svg'} alt="spinner" />
+		</div>
+	);
+};
+
+const PokemonListings = (props: { pokemon: PokemonFromServer; disabled: boolean; vote: () => void }): JSX.Element => {
+	return (
+		<div className={`w-64 h-auto max-w-2xl flex flex-col items-center ${props.disabled && 'opacity-0'} `}>
 			<Image quality={100} width={250} height={250} src={props.pokemon.spriteUrl!} alt={props.pokemon.name} />
 			<div className="font-semibold tracking-wider text-base sm:text-xl text-center  capitalize pb-2 md:mt-[-1rem]">
 				{props.pokemon.name}
